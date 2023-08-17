@@ -1,0 +1,175 @@
+<?php
+include('Adminhead.php');
+ include_once("config/config.php");  
+ error_reporting(0);
+mysql_connect("localhost","root","")  or die(mysql_error());
+mysql_select_db("Placement")  or die(mysql_error());
+$query = "select * from companydetails ";
+	$result = mysql_query($query) or die(mysql_error());
+	while($row = mysql_fetch_assoc($result))
+		{
+		$cname[] = $row;
+		}
+	if(isset($_GET['edit']))
+		{
+		$id = $_GET['edit'];
+		}
+	else
+		{
+		$id = '';
+		}
+	
+
+$i=1;
+?>	
+<?php
+
+if(isset($_POST['a1']))
+	{
+	$query = "UPDATE companydetails set CompanyName='".$_POST['a2']."',ContactPerson='".$_POST['a3']."',ContactNumber='".$_POST['a4']."',Website='".$_POST['a5']."',Numberofemp='".$_POST['a6']."',Address='".$_POST['a7']."' where CompanyId='".$_POST['a1']."'";
+	echo $query;
+	if(mysql_query($query))
+		{
+		$_SESSION['message']='<span class="succuess">Record updated successfully</span>';
+		header('location:companyregister.php');
+		}	
+	else
+		{
+		$_SESSION['message']='<span class="fail">Record Not Updated</span>';
+		}
+	header("location:companyregister.php");
+	exit;
+	}
+	?>
+						<?php
+
+if(isset($_GET['delete']))
+	{
+	
+	$query = "delete from companydetails where CompanyId='".$_GET['delete']."'";
+	mysql_query($query);
+		echo '<script>alert("Deleted");</script>';
+	//	$_SESSION['message']='<span class="succuess">Record Delete succussfully</span>';
+		
+header("location:companyregister.php");
+	exit;
+	}
+ 
+	
+?>
+
+<div align="center">
+<script type="text/javascript">	
+  $(document).ready(function(){
+    $("#register_form").validate();
+  });
+</script>
+<form action="companyregister.php" name="register_form"  id="register_form"  method="post">
+	
+
+<form action="companyregister.php" name="ViewInterview" class="row" method="post">
+	<div    align="center">
+	<center >
+
+<h2> Company Details </h2>
+	<table border="2" cellspacing="6" class="displaycontent" width="800" style="border:10px solid Darkblue;" align="center">
+	<tr>
+			<th bgcolor=Orange><font color=white size=2>Company Id</font></th>
+			<th bgcolor=Orange><font color=white size=2>Company Name</font></th>
+			<th bgcolor=Orange><font color=white size=2>Contact Person</font></th>
+			<th bgcolor=Orange><font color=white size=2>Contact Number </font></th>
+			<th bgcolor=Orange><font color=white size=2>Website</font></th>
+			<th bgcolor=Orange><font color=white size=2>Number of Employees </font></th>
+			<th bgcolor=Orange><font color=white size=2>Address </font></th>
+<!--			<th bgcolor=Orange><font color=white size=2>Edit </font></th>
+			<th bgcolor=Orange><font color=white size=2>Delete </font></th>
+			-->
+		
+			
+			
+		            
+	</tr>
+	  <?php
+  	  if(count($cname)>0){
+	  foreach($cname as $cat){
+		if($id == $cat['CompanyId']){
+	  ?>
+	<tr>
+		
+		
+		<td ><font color=#000000 size=2><input type="text" value="<?php echo $cat['CompanyId'];?>" name="a1" class="required" /></font></td>
+		<td ><font color=#000000 size=2><input type="text" value="<?php echo $cat['CompanyName'];?>" name="a2" class="required" /></font></td>
+		<td ><font color=#000000 size=2><input type="text" value="<?php echo $cat['ContactPerson'];?>" name="a3" class="required" /></font></td>
+		<td ><font color=#000000 size=2><input type="text" value="<?php echo $cat['ContactNumber'];?>" name="a4" class="required" /></font></td>
+        <td ><font color=#000000 size=2><input type="text" value="<?php echo $cat['Website'];?>" name="a5" class="required" /></font></td>
+		<td ><font color=#000000 size=2><input type="text" value="<?php echo $cat['Numberofemp'];?>" name="a6" class="required" /></font></td>
+		<td ><font color=#000000 size=2><input type="text" value="<?php echo $cat['Address'];?>" name="a7" class="required" /></font></td>
+	<!--	        <td><font color=#000000 size=2><input type="hidden" value="<?php echo $id; ?>"  name="sno"/>
+			<input type="submit" value="update" /></font></td>
+		<td><font color=#000000 size=2><input type="button" value="cancel" onClick="window.location.href='companyregister.php';"/></font></td>
+		<td><input type="submit" value="delete" name="delete"/></td> -->
+	</tr>
+	<?php }else{	?>
+	<tr>
+		
+		<td bgcolor=white><font color=#000000 size=2><?php echo $cat['CompanyId']; ?></font></td>
+		<td bgcolor=white><font color=#000000 size=2><?php echo $cat['CompanyName']; ?></font></td>
+		<td bgcolor=white><font color=#000000 size=2><?php echo $cat['ContactPerson']; ?></font></td>
+        <td bgcolor=white><font color=#000000 size=2><?php echo $cat['ContactNumber']; ?></font></td>
+		<td bgcolor=white><font color=#000000 size=2><?php echo $cat['Website']; ?></font></td>       
+		
+		<td bgcolor=white><font color=#000000 size=2><?php echo $cat['Numberofemp']; ?></font></td>
+		<td bgcolor=white><font color=#000000 size=2><?php echo $cat['Address']; ?></font></td>
+		
+
+	<!--	<td bgcolor=white><font color=#000000 size=2><a href="?edit=<?php echo $cat['CompanyId'];?>">Edit</a></font></td>
+		<td bgcolor=white><font color=#000000 size=2><a href="?delete=<?php echo $cat['CompanyId'];?>">Delete</a></font></td> -->
+       
+	</tr>
+	<?php } }} ?>
+			
+	</table>
+</div>
+</form>
+<center>
+<img src="images/url.jpg">
+
+<br>
+&nbsp;&nbsp;&nbsp<a href="login.php">BACK</a>
+</center>
+	</form>
+</div>
+
+
+<?php
+ include_once("config/config.php");  
+ if(isset($_POST['register'])){
+	 if($_POST['p1']=="" || $_POST['p2']=="" || $_POST['p3']=="" || $_POST['p4']=="" || $_POST['p5']=="" )
+	 {
+		 echo '<script> alert("PLEASE FILL THE DETAILS");</script>';
+	 }
+	 else
+	 {
+	$query = "INSERT INTO `companydetails` VALUES ('".$_POST['p1']."', '".$_POST['p2']."', '".$_POST['p3']."', '".$_POST['p4']."', '".$_POST['p5']."', '".$_POST['p6']."', '".$_POST['p7']."')";
+        echo '<script> alert("REGISTERD SUCCESSFULLY");</script>';
+	//echo $query;
+   
+	if(mysql_query($query)){
+		echo 'REGISTERD SUCCESSFULLY';
+
+	}
+	else{
+		echo 'NOT REGISTERD';
+	}
+	//header("location:register.php");
+	exit;
+ }
+ }
+
+?>
+
+<?php
+include('footer.php');
+?>
+ 
+
